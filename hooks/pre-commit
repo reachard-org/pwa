@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+find . \
+    -type f \
+    -not -name .sql-formatter.json \
+    -not -name go.sum \
+    -not -path "./.git/*" \
+    -not -path "./.reuse/*" \
+    -exec reuse annotate \
+    --copyright "Pavel Sobolev" \
+    --copyright-prefix string \
+    --year 2025 \
+    --license "Apache-2.0" \
+    --template apache \
+    --skip-unrecognised \
+    --merge-copyrights \
+    {} +
