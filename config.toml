@@ -18,5 +18,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-/.zed
-/public
+base_url = "https://app.reachard.paveloom.dev"
+description = "A PWA client for Reachard"
+
+compile_sass = true
