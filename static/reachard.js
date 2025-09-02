@@ -57,8 +57,8 @@ async function postTarget(event) {
   });
 }
 
-const button = document.getElementById("list-button");
-button.addEventListener("click", listTargets);
+const listButton = document.getElementById("list-button");
+listButton.addEventListener("click", listTargets);
 
 const addForm = document.getElementById("add-form");
 addForm.addEventListener("submit", postTarget);
