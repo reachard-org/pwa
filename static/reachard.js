@@ -19,22 +19,46 @@
 // SPDX-License-Identifier: Apache-2.0
 
 const addr = "http://127.0.0.1:7272";
+const targetsEndpoint = `${addr}/v0/targets/`;
 
-const results = document.getElementById("results");
+const targets = document.getElementById("targets");
 
 async function listTargets(event) {
-  const response = await fetch(`${addr}/v0/targets/`);
+  const response = await fetch(targetsEndpoint);
   const json = await response.json();
 
-  results.innerHTML = "";
+  targets.innerHTML = "";
 
   console.log(json);
   for (const row of json) {
     const child = document.createElement("p");
     child.innerHTML = JSON.stringify(row);
-    results.appendChild(child);
+    targets.appendChild(child);
   }
+}
+
+async function postTarget(event) {
+  event.preventDefault();
+
+  const form = event.target;
+
+  const object = {
+    url: form.url.value,
+    interval_seconds: form.interval_seconds.valueAsNumber,
+  };
+  const json = JSON.stringify(object);
+
+  const response = await fetch(targetsEndpoint, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: json,
+  });
 }
 
 const button = document.getElementById("list-button");
 button.addEventListener("click", listTargets);
+
+const addForm = document.getElementById("add-form");
+addForm.addEventListener("submit", postTarget);

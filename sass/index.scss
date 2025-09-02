@@ -19,3 +19,29 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+
+#container {
+  margin: 1em;
+}
+
+#add-form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  margin: 1em 0;
+
+  > form {
+    display: flex;
+    flex-direction: row;
+    gap: 1em;
+    width: fit-content;
+  }
+
+  > button {
+    width: fit-content;
+  }
+}
+
+#targets-container {
+  margin: 1em 0;
+}

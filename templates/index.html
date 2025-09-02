@@ -23,6 +23,20 @@ SPDX-License-Identifier: Apache-2.0
 -->
 
 {% block content %}
-<button id="list-button">List all targets</button>
-<div id="results"></div>
+<h3>Targets</h3>
+
+<div id="add-form-container">
+  <form id="add-form" method="post">
+    <label for="url">URL:</label>
+    <input name="url" type="url" required>
+    <label for="interval_seconds">Interval (seconds):</label>
+    <input name="interval_seconds" type="number" required>
+  </form>
+  <button type="submit" form="add-form">Add a target</button>
+</div>
+
+<div id="targets-container">
+  <button id="list-button">List all targets</button>
+  <div id="targets"></div>
+</div>
 {% endblock content %}
