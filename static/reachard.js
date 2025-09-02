@@ -57,8 +57,30 @@ async function postTarget(event) {
   });
 }
 
+async function deleteTarget(event) {
+  event.preventDefault();
+
+  const form = event.target;
+
+  const object = {
+    id: form.id.valueAsNumber,
+  };
+  const json = JSON.stringify(object);
+
+  const response = await fetch(targetsEndpoint, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: json,
+  });
+}
+
 const listButton = document.getElementById("list-button");
 listButton.addEventListener("click", listTargets);
 
 const addForm = document.getElementById("add-form");
 addForm.addEventListener("submit", postTarget);
+
+const deleteForm = document.getElementById("delete-form");
+deleteForm.addEventListener("submit", deleteTarget);
