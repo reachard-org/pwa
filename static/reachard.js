@@ -62,10 +62,7 @@ async function deleteTarget(event) {
 
   const form = event.target;
 
-  const object = {
-    id: form.id.valueAsNumber,
-  };
-  const json = JSON.stringify(object);
+  const json = JSON.stringify(form.id.valueAsNumber);
 
   const response = await fetch(targetsEndpoint, {
     method: "DELETE",
