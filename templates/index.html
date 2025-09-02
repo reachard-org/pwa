@@ -28,9 +28,9 @@ SPDX-License-Identifier: Apache-2.0
 <div id="add-form-container">
   <form id="add-form">
     <label for="url">URL:</label>
-    <input name="url" type="url" required>
+    <input id="url" type="url" required>
     <label for="interval_seconds">Interval (seconds):</label>
-    <input name="interval_seconds" type="number" required>
+    <input id="interval_seconds" type="number" required>
   </form>
   <button type="submit" form="add-form">Add a target</button>
 </div>
@@ -38,7 +38,7 @@ SPDX-License-Identifier: Apache-2.0
 <div id="delete-form-container">
   <form id="delete-form">
     <label for="id">ID:</label>
-    <input name="id" type="number" required>
+    <input id="id" type="number" required>
   </form>
   <button type="submit" form="delete-form">Delete the target</button>
 </div>
