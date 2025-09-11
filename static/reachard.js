@@ -34,7 +34,14 @@ async function listTargets() {
 
   targets.innerHTML = "";
 
-  console.log(json);
+  if (json.length === 0) {
+    const child = document.createElement("p");
+    child.innerHTML = "No targets.";
+    targets.appendChild(child);
+
+    return;
+  }
+
   for (const row of json) {
     const child = document.createElement("p");
     child.innerHTML = JSON.stringify(row);
