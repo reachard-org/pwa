@@ -26,6 +26,12 @@ const targets = document.getElementById("targets");
 async function listTargets() {
   const response = await fetch(targetsEndpoint);
 
+  const contentType = response.headers.get("Content-Type");
+  if (contentType != "application/json") {
+    console.error("The response `Content-Type` for targets is not JSON.");
+    return;
+  }
+
   let object;
   try {
     object = await response.json();
