@@ -25,16 +25,23 @@ const targets = document.getElementById("targets");
 
 async function listTargets() {
   const response = await fetch(targetsEndpoint);
-  const json = await response.json();
 
-  if (!Array.isArray(json)) {
+  let object;
+  try {
+    object = await response.json();
+  } catch (err) {
+    console.error("Failed to parse the targets as JSON:", err);
+    return;
+  }
+
+  if (!Array.isArray(object)) {
     console.error("The list of targets is not a JSON array.");
     return;
   }
 
   targets.innerHTML = "";
 
-  if (json.length === 0) {
+  if (object.length === 0) {
     const child = document.createElement("p");
     child.innerHTML = "No targets.";
     targets.appendChild(child);
@@ -42,7 +49,7 @@ async function listTargets() {
     return;
   }
 
-  for (const row of json) {
+  for (const row of object) {
     const child = document.createElement("p");
     child.innerHTML = JSON.stringify(row);
     targets.appendChild(child);
