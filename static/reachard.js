@@ -23,7 +23,7 @@ const targetsEndpoint = `${addr}/v0/targets/`;
 
 const targets = document.getElementById("targets");
 
-async function listTargets(event) {
+async function listTargets() {
   const response = await fetch(targetsEndpoint);
   const json = await response.json();
 
