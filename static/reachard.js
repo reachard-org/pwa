@@ -27,6 +27,11 @@ async function listTargets() {
   const response = await fetch(targetsEndpoint);
   const json = await response.json();
 
+  if (!Array.isArray(json)) {
+    console.error("The list of targets is not a JSON array.");
+    return;
+  }
+
   targets.innerHTML = "";
 
   console.log(json);
