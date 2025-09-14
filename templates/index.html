@@ -37,9 +37,14 @@ SPDX-License-Identifier: Apache-2.0
   <button type="submit" form="session-log-in-form">Log in</button>
 </div>
 
-<h3>Targets</h3>
+<div id="session-logged-in-container" class="hidden" hidden>
+  <p>You are logged in.</p>
+  <button id="session-log-out-button">Log out</button>
+</div>
 
-<div id="targets-add-form-container">
+<h3 class="hidden" hidden>Targets</h3>
+
+<div id="targets-add-form-container" class="hidden" hidden>
   <form id="targets-add-form">
     <label for="url">URL:</label>
     <input id="url" type="url" required>
@@ -49,7 +54,7 @@ SPDX-License-Identifier: Apache-2.0
   <button type="submit" form="targets-add-form">Add a target</button>
 </div>
 
-<div id="targets-delete-form-container">
+<div id="targets-delete-form-container" class="hidden" hidden>
   <form id="targets-delete-form">
     <label for="id">ID:</label>
     <input id="id" type="number" required>
@@ -57,7 +62,7 @@ SPDX-License-Identifier: Apache-2.0
   <button type="submit" form="targets-delete-form">Delete the target</button>
 </div>
 
-<div id="targets-list-container">
+<div id="targets-list-container" class="hidden" hidden>
   <button id="targets-list-button">List all targets</button>
   <div id="targets-list"></div>
 </div>

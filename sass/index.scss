@@ -32,6 +32,10 @@
   gap: 1em;
   margin: 1em 0;
 
+  &[hidden] {
+    display: none;
+  }
+
   > form {
     display: flex;
     flex-direction: row;

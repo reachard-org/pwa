@@ -114,9 +114,38 @@ class AuthStoreHandler {
 }
 
 class SessionHandler {
+  async checkLoginStatus() {
+    const authStoreHandler = new AuthStoreHandler();
+    const sessionToken = await authStoreHandler.getSessionToken();
+
+    let hide = false;
+    if (sessionToken === "") {
+      hide = true;
+    }
+
+    const sessionLogInFormContainer = document.getElementById(
+      "session-log-in-form-container",
+    );
+    const hiddenElements = document.getElementsByClassName("hidden");
+
+    sessionLogInFormContainer.hidden = !hide;
+    for (const element of hiddenElements) {
+      element.hidden = hide;
+    }
+  }
+
   async init() {
     const sessionLogInForm = document.getElementById("session-log-in-form");
     sessionLogInForm.addEventListener("submit", (event) => this.logIn(event));
+
+    const sessionLogOutButton = document.getElementById(
+      "session-log-out-button",
+    );
+    sessionLogOutButton.addEventListener("click", (event) =>
+      this.logOut(event),
+    );
+
+    this.checkLoginStatus();
   }
 
   async logIn(event) {
@@ -158,10 +187,29 @@ class SessionHandler {
     }
 
     const sessionToken = responseObject;
-    console.log(sessionToken);
 
     const authStoreHandler = new AuthStoreHandler();
     authStoreHandler.putSessionToken(sessionToken);
+    this.checkLoginStatus();
+  }
+
+  async logOut() {
+    const authStoreHandler = new AuthStoreHandler();
+    const sessionToken = await authStoreHandler.getSessionToken();
+
+    if (sessionToken == "") {
+      return;
+    }
+
+    fetch(sessionEndpoint, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${sessionToken}`,
+      },
+    });
+
+    await authStoreHandler.deleteSessionToken();
+    this.checkLoginStatus();
   }
 }
 
