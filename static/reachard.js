@@ -21,7 +21,7 @@
 const addr = "http://127.0.0.1:7272";
 const targetsEndpoint = `${addr}/v0/targets/`;
 
-const targets = document.getElementById("targets");
+const targetsList = document.getElementById("targets-list");
 
 async function listTargets() {
   const response = await fetch(targetsEndpoint);
@@ -45,12 +45,12 @@ async function listTargets() {
     return;
   }
 
-  targets.innerHTML = "";
+  targetsList.innerHTML = "";
 
   if (object.length === 0) {
     const child = document.createElement("p");
     child.innerHTML = "No targets.";
-    targets.appendChild(child);
+    targetsList.appendChild(child);
 
     return;
   }
@@ -58,7 +58,7 @@ async function listTargets() {
   for (const row of object) {
     const child = document.createElement("p");
     child.innerHTML = JSON.stringify(row);
-    targets.appendChild(child);
+    targetsList.appendChild(child);
   }
 }
 
@@ -98,11 +98,11 @@ async function deleteTarget(event) {
   });
 }
 
-const listButton = document.getElementById("list-button");
-listButton.addEventListener("click", listTargets);
+const targetsListButton = document.getElementById("targets-list-button");
+targetsListButton.addEventListener("click", listTargets);
 
-const addForm = document.getElementById("add-form");
-addForm.addEventListener("submit", postTarget);
+const targetsAddForm = document.getElementById("targets-add-form");
+targetsAddForm.addEventListener("submit", postTarget);
 
-const deleteForm = document.getElementById("delete-form");
-deleteForm.addEventListener("submit", deleteTarget);
+const targetsDeleteForm = document.getElementById("targets-delete-form");
+targetsDeleteForm.addEventListener("submit", deleteTarget);

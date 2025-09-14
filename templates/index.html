@@ -25,26 +25,26 @@ SPDX-License-Identifier: Apache-2.0
 {% block content %}
 <h3>Targets</h3>
 
-<div id="add-form-container">
-  <form id="add-form">
+<div id="targets-add-form-container">
+  <form id="targets-add-form">
     <label for="url">URL:</label>
     <input id="url" type="url" required>
     <label for="interval_seconds">Interval (seconds):</label>
     <input id="interval_seconds" type="number" required>
   </form>
-  <button type="submit" form="add-form">Add a target</button>
+  <button type="submit" form="targets-add-form">Add a target</button>
 </div>
 
-<div id="delete-form-container">
-  <form id="delete-form">
+<div id="targets-delete-form-container">
+  <form id="targets-delete-form">
     <label for="id">ID:</label>
     <input id="id" type="number" required>
   </form>
-  <button type="submit" form="delete-form">Delete the target</button>
+  <button type="submit" form="targets-delete-form">Delete the target</button>
 </div>
 
-<div id="targets-container">
-  <button id="list-button">List all targets</button>
-  <div id="targets"></div>
+<div id="targets-list-container">
+  <button id="targets-list-button">List all targets</button>
+  <div id="targets-list"></div>
 </div>
 {% endblock content %}

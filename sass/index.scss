@@ -24,8 +24,8 @@
   margin: 1em;
 }
 
-#add-form-container,
-#delete-form-container {
+#targets-add-form-container,
+#targets-delete-form-container {
   display: flex;
   flex-direction: column;
   gap: 1em;
@@ -43,6 +43,6 @@
   }
 }
 
-#targets-container {
+#targets-list-container {
   margin: 1em 0;
 }
