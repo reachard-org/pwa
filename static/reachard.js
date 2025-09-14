@@ -21,88 +21,103 @@
 const addr = "http://127.0.0.1:7272";
 const targetsEndpoint = `${addr}/v0/targets/`;
 
-const targetsList = document.getElementById("targets-list");
-
-async function listTargets() {
-  const response = await fetch(targetsEndpoint);
-
-  const contentType = response.headers.get("Content-Type");
-  if (contentType != "application/json") {
-    console.error("The response `Content-Type` for targets is not JSON.");
-    return;
+class TargetsHandler {
+  constructor() {
+    this.targetsList = document.getElementById("targets-list");
   }
 
-  let object;
-  try {
-    object = await response.json();
-  } catch (err) {
-    console.error("Failed to parse the targets as JSON:", err);
-    return;
+  init() {
+    const targetsListButton = document.getElementById("targets-list-button");
+    targetsListButton.addEventListener("click", (event) =>
+      this.listTargets(event),
+    );
+
+    const targetsAddForm = document.getElementById("targets-add-form");
+    targetsAddForm.addEventListener("submit", (event) =>
+      this.postTarget(event),
+    );
+
+    const targetsDeleteForm = document.getElementById("targets-delete-form");
+    targetsDeleteForm.addEventListener("submit", (event) =>
+      this.deleteTarget(event),
+    );
   }
 
-  if (!Array.isArray(object)) {
-    console.error("The list of targets is not a JSON array.");
-    return;
+  async listTargets() {
+    const response = await fetch(targetsEndpoint);
+
+    const contentType = response.headers.get("Content-Type");
+    if (contentType != "application/json") {
+      console.error("The response `Content-Type` for targets is not JSON.");
+      return;
+    }
+
+    let object;
+    try {
+      object = await response.json();
+    } catch (err) {
+      console.error("Failed to parse the targets as JSON:", err);
+      return;
+    }
+
+    if (!Array.isArray(object)) {
+      console.error("The list of targets is not a JSON array.");
+      return;
+    }
+
+    this.targetsList.innerHTML = "";
+
+    if (object.length === 0) {
+      const child = document.createElement("p");
+      child.innerHTML = "No targets.";
+      this.targetsList.appendChild(child);
+
+      return;
+    }
+
+    for (const row of object) {
+      const child = document.createElement("p");
+      child.innerHTML = JSON.stringify(row);
+      this.targetsList.appendChild(child);
+    }
   }
 
-  targetsList.innerHTML = "";
+  async postTarget(event) {
+    event.preventDefault();
 
-  if (object.length === 0) {
-    const child = document.createElement("p");
-    child.innerHTML = "No targets.";
-    targetsList.appendChild(child);
+    const form = event.target;
 
-    return;
+    const object = {
+      url: form.url.value,
+      interval_seconds: form.interval_seconds.valueAsNumber,
+    };
+    const json = JSON.stringify(object);
+
+    await fetch(targetsEndpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: json,
+    });
   }
 
-  for (const row of object) {
-    const child = document.createElement("p");
-    child.innerHTML = JSON.stringify(row);
-    targetsList.appendChild(child);
+  async deleteTarget(event) {
+    event.preventDefault();
+
+    const form = event.target;
+
+    const json = JSON.stringify(form.id.valueAsNumber);
+
+    await fetch(targetsEndpoint, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: json,
+    });
   }
 }
 
-async function postTarget(event) {
-  event.preventDefault();
-
-  const form = event.target;
-
-  const object = {
-    url: form.url.value,
-    interval_seconds: form.interval_seconds.valueAsNumber,
-  };
-  const json = JSON.stringify(object);
-
-  await fetch(targetsEndpoint, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: json,
-  });
-}
-
-async function deleteTarget(event) {
-  event.preventDefault();
-
-  const form = event.target;
-
-  const json = JSON.stringify(form.id.valueAsNumber);
-
-  await fetch(targetsEndpoint, {
-    method: "DELETE",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: json,
-  });
-}
-
-const targetsListButton = document.getElementById("targets-list-button");
-targetsListButton.addEventListener("click", listTargets);
-
-const targetsAddForm = document.getElementById("targets-add-form");
-targetsAddForm.addEventListener("submit", postTarget);
-
-const targetsDeleteForm = document.getElementById("targets-delete-form");
-targetsDeleteForm.addEventListener("submit", deleteTarget);
+const targetsHandler = new TargetsHandler();
+targetsHandler.init();
