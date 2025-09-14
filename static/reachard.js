@@ -197,7 +197,7 @@ class SessionHandler {
     const authStoreHandler = new AuthStoreHandler();
     const sessionToken = await authStoreHandler.getSessionToken();
 
-    if (sessionToken == "") {
+    if (sessionToken === "") {
       return;
     }
 
@@ -234,7 +234,18 @@ class TargetsHandler {
   }
 
   async listTargets() {
-    const response = await fetch(targetsEndpoint);
+    const authStoreHandler = new AuthStoreHandler();
+    const sessionToken = await authStoreHandler.getSessionToken();
+
+    if (sessionToken === "") {
+      return;
+    }
+
+    const response = await fetch(targetsEndpoint, {
+      headers: {
+        Authorization: `Bearer ${sessionToken}`,
+      },
+    });
 
     const contentType = response.headers.get("Content-Type");
     if (contentType != "application/json") {
@@ -277,6 +288,13 @@ class TargetsHandler {
   async postTarget(event) {
     event.preventDefault();
 
+    const authStoreHandler = new AuthStoreHandler();
+    const sessionToken = await authStoreHandler.getSessionToken();
+
+    if (sessionToken === "") {
+      return;
+    }
+
     const form = event.target;
 
     const object = {
@@ -288,6 +306,7 @@ class TargetsHandler {
     await fetch(targetsEndpoint, {
       method: "POST",
       headers: {
+        Authorization: `Bearer ${sessionToken}`,
         "Content-Type": "application/json",
       },
       body: json,
@@ -297,13 +316,20 @@ class TargetsHandler {
   async deleteTarget(event) {
     event.preventDefault();
 
-    const form = event.target;
+    const authStoreHandler = new AuthStoreHandler();
+    const sessionToken = await authStoreHandler.getSessionToken();
 
+    if (sessionToken === "") {
+      return;
+    }
+
+    const form = event.target;
     const json = JSON.stringify(form.id.valueAsNumber);
 
     await fetch(targetsEndpoint, {
       method: "DELETE",
       headers: {
+        Authorization: `Bearer ${sessionToken}`,
         "Content-Type": "application/json",
       },
       body: json,
