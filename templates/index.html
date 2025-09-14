@@ -23,6 +23,18 @@ SPDX-License-Identifier: Apache-2.0
 -->
 
 {% block content %}
+<h3>Session</h3>
+
+<div id="session-log-in-form-container">
+  <form id="session-log-in-form">
+    <label for="username">Username:</label>
+    <input id="username" type="text" required>
+    <label for="password">Password:</label>
+    <input id="password" type="password" required>
+  </form>
+  <button type="submit" form="session-log-in-form">Log in</button>
+</div>
+
 <h3>Targets</h3>
 
 <div id="targets-add-form-container">

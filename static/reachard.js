@@ -19,7 +19,57 @@
 // SPDX-License-Identifier: Apache-2.0
 
 const addr = "http://127.0.0.1:7272";
+const sessionEndpoint = `${addr}/v0/session/`;
 const targetsEndpoint = `${addr}/v0/targets/`;
+
+class SessionHandler {
+  init() {
+    const sessionLogInForm = document.getElementById("session-log-in-form");
+    sessionLogInForm.addEventListener("submit", (event) => this.logIn(event));
+  }
+
+  async logIn(event) {
+    event.preventDefault();
+
+    const form = event.target;
+
+    const requestObject = {
+      username: form.username.value,
+      password: form.password.value,
+    };
+    const json = JSON.stringify(requestObject);
+
+    const response = await fetch(sessionEndpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: json,
+    });
+
+    const contentType = response.headers.get("Content-Type");
+    if (contentType != "application/json") {
+      console.error("The response `Content-Type` for targets is not JSON.");
+      return;
+    }
+
+    let responseObject;
+    try {
+      responseObject = await response.json();
+    } catch (err) {
+      console.error("Failed to parse the session token as JSON:", err);
+      return;
+    }
+
+    if (typeof responseObject !== "string") {
+      console.error("The session token is not a JSON string.");
+      return;
+    }
+
+    const sessionToken = responseObject;
+    console.log(sessionToken);
+  }
+}
 
 class TargetsHandler {
   constructor() {
@@ -120,6 +170,9 @@ class TargetsHandler {
     });
   }
 }
+
+const sessionHandler = new SessionHandler();
+sessionHandler.init();
 
 const targetsHandler = new TargetsHandler();
 targetsHandler.init();
