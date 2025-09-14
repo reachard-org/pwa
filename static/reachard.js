@@ -52,22 +52,24 @@ class TargetsHandler {
       return;
     }
 
-    let object;
+    let responseObject;
     try {
-      object = await response.json();
+      responseObject = await response.json();
     } catch (err) {
       console.error("Failed to parse the targets as JSON:", err);
       return;
     }
 
-    if (!Array.isArray(object)) {
+    if (!Array.isArray(responseObject)) {
       console.error("The list of targets is not a JSON array.");
       return;
     }
 
+    const targets = responseObject;
+
     this.targetsList.innerHTML = "";
 
-    if (object.length === 0) {
+    if (targets.length === 0) {
       const child = document.createElement("p");
       child.innerHTML = "No targets.";
       this.targetsList.appendChild(child);
@@ -75,9 +77,9 @@ class TargetsHandler {
       return;
     }
 
-    for (const row of object) {
+    for (const target of targets) {
       const child = document.createElement("p");
-      child.innerHTML = JSON.stringify(row);
+      child.innerHTML = JSON.stringify(target);
       this.targetsList.appendChild(child);
     }
   }
