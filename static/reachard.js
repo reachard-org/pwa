@@ -22,6 +22,97 @@ const addr = "http://127.0.0.1:7272";
 const sessionEndpoint = `${addr}/v0/session/`;
 const targetsEndpoint = `${addr}/v0/targets/`;
 
+class StoreHandler {
+  dbName = "reachard";
+  version = 1;
+  objectStores = ["auth"];
+
+  async openDatabase() {
+    return new Promise((resolve, reject) => {
+      const request = indexedDB.open(this.dbName, this.version);
+
+      request.onerror = (event) => {
+        reject(event.target.error.message);
+      };
+
+      request.onsuccess = (event) => {
+        resolve(event.target.result);
+      };
+
+      request.onupgradeneeded = (event) => {
+        const db = event.target.result;
+        for (const store of this.objectStores) {
+          if (!db.objectStoreNames.contains(store)) {
+            db.createObjectStore(store);
+          }
+        }
+      };
+    });
+  }
+}
+
+class AuthStoreHandler {
+  storeName = "auth";
+  sessionTokenKey = "sessionToken";
+  storeHandler = new StoreHandler();
+
+  async putSessionToken(sessionToken) {
+    const db = await this.storeHandler.openDatabase();
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction(this.storeName, "readwrite");
+      const store = transaction.objectStore(this.storeName);
+      const request = store.put(sessionToken, this.sessionTokenKey);
+
+      request.onsuccess = () => {
+        resolve();
+      };
+
+      request.onerror = (event) => {
+        reject(event.target.error.message);
+      };
+    });
+  }
+
+  async getSessionToken() {
+    const db = await this.storeHandler.openDatabase();
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction(this.storeName, "readonly");
+      const store = transaction.objectStore(this.storeName);
+      const request = store.get(this.sessionTokenKey);
+
+      request.onsuccess = (event) => {
+        const value = event.target.result;
+        if (value !== undefined && typeof value === "string") {
+          resolve(value);
+        } else {
+          resolve("");
+        }
+      };
+
+      request.onerror = (event) => {
+        reject(event.target.error.message);
+      };
+    });
+  }
+
+  async deleteSessionToken() {
+    const db = await this.storeHandler.openDatabase();
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction(this.storeName, "readwrite");
+      const store = transaction.objectStore(this.storeName);
+      const request = store.delete(this.sessionTokenKey);
+
+      request.onsuccess = () => {
+        resolve();
+      };
+
+      request.onerror = (event) => {
+        reject(event.target.error.message);
+      };
+    });
+  }
+}
+
 class SessionHandler {
   async init() {
     const sessionLogInForm = document.getElementById("session-log-in-form");
@@ -68,6 +159,9 @@ class SessionHandler {
 
     const sessionToken = responseObject;
     console.log(sessionToken);
+
+    const authStoreHandler = new AuthStoreHandler();
+    authStoreHandler.putSessionToken(sessionToken);
   }
 }
 
