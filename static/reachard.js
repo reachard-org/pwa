@@ -23,7 +23,7 @@ const sessionEndpoint = `${addr}/v0/session/`;
 const targetsEndpoint = `${addr}/v0/targets/`;
 
 class SessionHandler {
-  init() {
+  async init() {
     const sessionLogInForm = document.getElementById("session-log-in-form");
     sessionLogInForm.addEventListener("submit", (event) => this.logIn(event));
   }
@@ -76,7 +76,7 @@ class TargetsHandler {
     this.targetsList = document.getElementById("targets-list");
   }
 
-  init() {
+  async init() {
     const targetsListButton = document.getElementById("targets-list-button");
     targetsListButton.addEventListener("click", (event) =>
       this.listTargets(event),
