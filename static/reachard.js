@@ -73,7 +73,7 @@ async function postTarget(event) {
   };
   const json = JSON.stringify(object);
 
-  const response = await fetch(targetsEndpoint, {
+  await fetch(targetsEndpoint, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -89,7 +89,7 @@ async function deleteTarget(event) {
 
   const json = JSON.stringify(form.id.valueAsNumber);
 
-  const response = await fetch(targetsEndpoint, {
+  await fetch(targetsEndpoint, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
