@@ -72,9 +72,7 @@ class SessionHandler {
 }
 
 class TargetsHandler {
-  constructor() {
-    this.targetsList = document.getElementById("targets-list");
-  }
+  targetsList = document.getElementById("targets-list");
 
   async init() {
     const targetsListButton = document.getElementById("targets-list-button");
