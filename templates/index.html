@@ -24,6 +24,10 @@ SPDX-License-Identifier: Apache-2.0
 
 {% block title %}Reachard{% endblock title %}
 
+{% block scripts %}
+<script type="module" src="{{ get_url(path='reachard-index.js') }}"></script>
+{% endblock scripts %}
+
 {% block content %}
 <h3>Session</h3>
 

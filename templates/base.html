@@ -39,7 +39,8 @@ font-src 'self'; style-src 'self'; script-src 'self' " %}
   <meta name="description" content="{{ config.description }}" />
   <link rel="stylesheet" href="{{ get_url(path='index.css') }}" />
   <title>{% block title %}{% endblock title %}</title>
-  <script type="module" src="{{ get_url(path='reachard.js') }}"></script>
+  <link rel="modulepreload" href="{{ get_url(path='reachard-lib.js') }}" />
+  {% block scripts %}{% endblock scripts %}
 </head>
 
 <body>

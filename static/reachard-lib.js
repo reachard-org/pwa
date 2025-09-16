@@ -113,7 +113,7 @@ class AuthStoreHandler {
   }
 }
 
-class SessionHandler {
+export class SessionHandler {
   async checkLoginStatus() {
     const authStoreHandler = new AuthStoreHandler();
     const sessionToken = await authStoreHandler.getSessionToken();
@@ -213,7 +213,7 @@ class SessionHandler {
   }
 }
 
-class TargetsHandler {
+export class TargetsHandler {
   targetsList = document.getElementById("targets-list");
 
   async init() {
@@ -336,9 +336,3 @@ class TargetsHandler {
     });
   }
 }
-
-const sessionHandler = new SessionHandler();
-sessionHandler.init();
-
-const targetsHandler = new TargetsHandler();
-targetsHandler.init();
