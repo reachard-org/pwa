@@ -213,6 +213,18 @@ export class SessionHandler {
   }
 }
 
+class TargetHandler {
+  constructor(target) {
+    this.target = target;
+  }
+
+  render() {
+    const element = document.createElement("p");
+    element.innerHTML = JSON.stringify(this.target);
+    return element;
+  }
+}
+
 export class TargetsHandler {
   targetsList = document.getElementById("targets-list");
 
@@ -279,9 +291,8 @@ export class TargetsHandler {
     }
 
     for (const target of targets) {
-      const child = document.createElement("p");
-      child.innerHTML = JSON.stringify(target);
-      this.targetsList.appendChild(child);
+      const targetHandler = new TargetHandler(target);
+      this.targetsList.appendChild(targetHandler.render());
     }
   }
 
