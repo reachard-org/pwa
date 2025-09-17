@@ -298,6 +298,7 @@ export class TargetsHandler {
     const form = event.target;
 
     const object = {
+      name: form.name.value,
       url: form.url.value,
       interval_seconds: form.interval_seconds.valueAsNumber,
     };
