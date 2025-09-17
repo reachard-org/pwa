@@ -228,6 +228,8 @@ class TargetHandler {
 export class TargetsHandler {
   targetsList = document.getElementById("targets-list");
 
+  targets = [];
+
   async init() {
     const targetsListButton = document.getElementById("targets-list-button");
     targetsListButton.addEventListener("click", (event) =>
@@ -290,8 +292,10 @@ export class TargetsHandler {
       return;
     }
 
+    this.targets = [];
     for (const target of targets) {
       const targetHandler = new TargetHandler(target);
+      this.targets.push(target);
       this.targetsList.appendChild(targetHandler.render());
     }
   }
