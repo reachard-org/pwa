@@ -5,6 +5,7 @@ find . \
     -not -path "./.git/*" \
     -not -path "./.reuse/*" \
     -not -path "./public/*" \
+    -not -path "./static/icons/*" \
     -exec reuse annotate \
     --copyright "Pavel Sobolev" \
     --copyright-prefix string \

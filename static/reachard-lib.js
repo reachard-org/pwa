@@ -114,23 +114,19 @@ class AuthStoreHandler {
 }
 
 export class SessionHandler {
+  elements = {
+    "ref-profile-logged-out": document.getElementById("ref-profile-logged-out"),
+    "ref-profile-logged-in": document.getElementById("ref-profile-logged-in"),
+  };
+
   async checkLoginStatus() {
     const authStoreHandler = new AuthStoreHandler();
     const sessionToken = await authStoreHandler.getSessionToken();
 
-    let hide = false;
-    if (sessionToken === "") {
-      hide = true;
-    }
-
-    const sessionLogInFormContainer = document.getElementById(
-      "session-log-in-form-container",
-    );
-    const hiddenElements = document.getElementsByClassName("hidden");
-
-    sessionLogInFormContainer.hidden = !hide;
-    for (const element of hiddenElements) {
-      element.hidden = hide;
+    if (sessionToken !== "") {
+      this.elements["ref-profile-logged-in"].checked = true;
+    } else {
+      this.elements["ref-profile-logged-out"].checked = true;
     }
   }
 
@@ -226,9 +222,10 @@ class TargetHandler {
 }
 
 export class TargetsHandler {
-  targetsList = document.getElementById("targets-list");
-
   targets = [];
+  elements = {
+    targetsList: document.getElementById("targets-list"),
+  };
 
   async init() {
     const targetsListButton = document.getElementById("targets-list-button");
@@ -282,21 +279,23 @@ export class TargetsHandler {
 
     const targets = responseObject;
 
-    this.targetsList.innerHTML = "";
+    this.elements.targetsList.innerHTML = "";
 
     if (targets.length === 0) {
       const child = document.createElement("p");
       child.innerHTML = "No targets.";
-      this.targetsList.appendChild(child);
+      this.elements.targetsList.appendChild(child);
 
       return;
     }
 
     this.targets = [];
     for (const target of targets) {
-      const targetHandler = new TargetHandler(target);
+      const targetHandler = new TargetHandler(target, this.elements);
       this.targets.push(target);
-      this.targetsList.appendChild(targetHandler.render());
+
+      const child = targetHandler.render();
+      this.elements.targetsList.appendChild(child);
     }
   }
 

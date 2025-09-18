@@ -20,8 +20,78 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-#container {
-  margin: 1em;
+body {
+  display: flex;
+  flex-direction: row;
+  box-sizing: border-box;
+  margin: 0;
+  font-size: 16px;
+  font-family: Inter, sans-serif;
+  font-optical-sizing: auto;
+  height: 100vh;
+}
+
+header {
+  font-size: 1.25rem;
+}
+
+.ref {
+  display: none;
+}
+
+#sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 2em;
+  min-width: 15vw;
+  padding: 1rem;
+  border-right: 1px solid hsl(0, 0, 90);
+  color: black;
+
+  > header {
+    padding: 0.5rem 0.75rem;
+  }
+
+  .sidebar-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+  }
+
+  .sidebar-tab {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5em;
+    align-items: center;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.75rem;
+    color: inherit;
+    font-size: 1.15em;
+
+    &:hover {
+      background-color: hsl(0, 0, 90);
+    }
+
+    > img {
+      width: 1em;
+      height: 1em;
+    }
+  }
+}
+
+#views {
+  padding: 1rem;
+
+  > section {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    padding: 0.5rem 0.75rem;
+  }
+
+  .view {
+    display: none;
+  }
 }
 
 #session-log-in-form-container,
@@ -32,13 +102,10 @@
   gap: 1em;
   margin: 1em 0;
 
-  &[hidden] {
-    display: none;
-  }
-
   > form {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    flex-wrap: wrap;
     gap: 1em;
     width: fit-content;
   }
@@ -48,6 +115,10 @@
   }
 }
 
-#targets-list-container {
-  margin: 1em 0;
+$refs: targets, profile, profile-logged-in, profile-logged-out;
+
+@each $ref in $refs {
+  #ref-#{$ref}:checked ~ #views #view-#{$ref} {
+    display: flex;
+  }
 }

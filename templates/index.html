@@ -1,5 +1,3 @@
-{% extends "base.html" %}
-
 <!--
 Copyright 2025 Pavel Sobolev
 
@@ -22,54 +20,99 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 
-{% block title %}Reachard{% endblock title %}
+<!doctype html>
+<html lang="en">
 
-{% block scripts %}
-<script type="module" src="{{ get_url(path='reachard-index.js') }}"></script>
-{% endblock scripts %}
+{% set csp = "default-src 'none'; img-src 'self'; base-uri 'none'; form-action 'none';
+font-src 'self' https://fonts.gstatic.com; style-src 'self' https://fonts.googleapis.com; script-src 'self' " %}
 
-{% block content %}
-<h3>Session</h3>
+{% if config.mode == "serve" %}
+{% set csp = csp ~ "; connect-src http: https: ws://127.0.0.1:1024/livereload;" %}
+{% else %}
+{% set csp = csp ~ "; connect-src http: https:;"%}
+{% endif %}
 
-<div id="session-log-in-form-container">
-  <form id="session-log-in-form">
-    <label for="username">Username:</label>
-    <input id="username" autocomplete="username" type="text" required>
-    <label for="password">Password:</label>
-    <input id="password" type="password" required>
-  </form>
-  <button type="submit" form="session-log-in-form">Log in</button>
-</div>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="Content-Security-Policy" content="{{ csp | safe }}" />
+  <meta name="description" content="{{ config.description }}" />
+  <link rel="stylesheet" href="{{ get_url(path='reachard-index.css') }}" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap">
+  <title>{% block title %}{% endblock title %}</title>
+  <link rel="modulepreload" href="{{ get_url(path='reachard-lib.js') }}" />
+  <script type="module" src="{{ get_url(path='reachard-index.js') }}"></script>
+</head>
 
-<div id="session-logged-in-container" class="hidden" hidden>
-  <p>You are logged in.</p>
-  <button id="session-log-out-button">Log out</button>
-</div>
+<body>
+  <input id="ref-targets" class="ref" type="radio" name="tab" checked>
+  <input id="ref-profile" class="ref" type="radio" name="tab">
+  <input id="ref-profile-logged-out" class="ref" type="radio" name="login" checked>
+  <input id="ref-profile-logged-in" class="ref" type="radio" name="login">
 
-<h3 class="hidden" hidden>Targets</h3>
+  <nav id="sidebar">
+    <header>Reachard</header>
+    <div class="sidebar-section">
+      <label class="sidebar-tab" for="ref-targets">
+        <img src="{{ get_url(path='icons/reachard-targets.svg') }}" alt="">
+        Targets
+      </label>
+      <label class="sidebar-tab" for="ref-profile">
+        <img src="{{ get_url(path='icons/reachard-profile.svg') }}" alt="">
+        Profile
+      </label>
+    </div>
+  </nav>
+  <main id="views">
+    <section id="view-targets" class="view">
+      <header>Targets</header>
+      <div id="targets-add-form-container">
+        <form id="targets-add-form">
+          <label for="name">Name:</label>
+          <input id="name" type="text" autocomplete="off" required>
+          <label for="url">URL:</label>
+          <input id="url" type="url" required>
+          <label for="interval_seconds">Interval (seconds):</label>
+          <input id="interval_seconds" type="number" required>
+        </form>
+        <button type="submit" form="targets-add-form">Add a target</button>
+      </div>
+      <div id="targets-delete-form-container">
+        <form id="targets-delete-form">
+          <label for="id">ID:</label>
+          <input id="id" type="number" required>
+        </form>
+        <button type="submit" form="targets-delete-form">Delete the target</button>
+      </div>
+      <div id="targets-list-container">
+        <button id="targets-list-button">List all targets</button>
+        <div id="targets-list"></div>
+      </div>
+    </section>
+    <section id="view-profile" class="view">
+      <header>Profile</header>
+      <section id="view-profile-logged-out" class="view">
+        <div id="session-log-in-form-container">
+          <form id="session-log-in-form">
+            <label for="username">Username:</label>
+            <input id="username" type="text" autocomplete="username" required>
+            <label for="password">Password:</label>
+            <input id="password" type="password" required>
+          </form>
+          <button type="submit" form="session-log-in-form">Log in</button>
+        </div>
+      </section>
+      <section id="view-profile-logged-in" class="view">
+        <div id="session-logged-in-container">
+          <p>You are logged in.</p>
+          <button id="session-log-out-button">Log out</button>
+        </div>
+      </section>
+    </section>
+  </main>
+</body>
 
-<div id="targets-add-form-container" class="hidden" hidden>
-  <form id="targets-add-form">
-    <label for="name">Name:</label>
-    <input id="name" type="text" required>
-    <label for="url">URL:</label>
-    <input id="url" type="url" required>
-    <label for="interval_seconds">Interval (seconds):</label>
-    <input id="interval_seconds" type="number" required>
-  </form>
-  <button type="submit" form="targets-add-form">Add a target</button>
-</div>
-
-<div id="targets-delete-form-container" class="hidden" hidden>
-  <form id="targets-delete-form">
-    <label for="id">ID:</label>
-    <input id="id" type="number" required>
-  </form>
-  <button type="submit" form="targets-delete-form">Delete the target</button>
-</div>
-
-<div id="targets-list-container" class="hidden" hidden>
-  <button id="targets-list-button">List all targets</button>
-  <div id="targets-list"></div>
-</div>
-{% endblock content %}
+</html>
