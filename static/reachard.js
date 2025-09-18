@@ -351,3 +351,11 @@ export class TargetsHandler {
     });
   }
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  const sessionHandler = new SessionHandler();
+  sessionHandler.init();
+
+  const targetsHandler = new TargetsHandler();
+  targetsHandler.init();
+});

@@ -37,14 +37,13 @@ font-src 'self' https://fonts.gstatic.com; style-src 'self' https://fonts.google
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta http-equiv="Content-Security-Policy" content="{{ csp | safe }}" />
   <meta name="description" content="{{ config.description }}" />
-  <link rel="stylesheet" href="{{ get_url(path='reachard-index.css') }}" />
+  <link rel="stylesheet" href="{{ get_url(path='reachard.css') }}" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap">
   <title>{% block title %}{% endblock title %}</title>
-  <link rel="modulepreload" href="{{ get_url(path='reachard-lib.js') }}" />
-  <script type="module" src="{{ get_url(path='reachard-index.js') }}"></script>
+  <script type="module" src="{{ get_url(path='reachard.js') }}"></script>
 </head>
 
 <body>
