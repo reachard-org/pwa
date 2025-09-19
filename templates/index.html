@@ -24,10 +24,10 @@ SPDX-License-Identifier: Apache-2.0
 <html lang="en">
 
 {% set csp = "default-src 'none'; img-src 'self'; base-uri 'none'; form-action 'none';
-font-src 'self' https://fonts.gstatic.com; style-src 'self' https://fonts.googleapis.com; script-src 'self' " %}
+font-src 'self' https://fonts.gstatic.com; style-src 'self' https://fonts.googleapis.com; script-src 'self'" %}
 
 {% if config.mode == "serve" %}
-{% set csp = csp ~ "; connect-src http: https: ws://127.0.0.1:1024/livereload;" %}
+{% set csp = csp ~ "; connect-src http: https: ws: wss:;" %}
 {% else %}
 {% set csp = csp ~ "; connect-src http: https:;"%}
 {% endif %}

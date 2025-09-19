@@ -1,3 +1,5 @@
+#!/bin/sh
+
 # Copyright 2025 Pavel Sobolev
 #
 # This file is part of the Reachard project, located at
@@ -18,34 +20,16 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-name: reachard
-services:
-  pwa:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        BASE_URL: ${BASE_URL}
-    restart: unless-stopped
-    develop:
-      watch:
-        - path: content
-          action: rebuild
-        - path: nginx
-          action: rebuild
-        - path: sass
-          action: rebuild
-        - path: static
-          action: rebuild
-        - path: templates
-          action: rebuild
-    networks:
-      - pwa
-      - traefik
-    labels:
-      - traefik.enable=true
-      - traefik.docker.network=traefik
-networks:
-  pwa:
-  traefik:
-    external: true
+set -e
+
+cd /build
+
+zola() {
+    nohup zola serve -i 0.0.0.0 -p 443 "$@" &
+}
+
+if [ -n "$BASE_URL" ]; then
+    zola -u "$BASE_URL"
+else
+    zola
+fi

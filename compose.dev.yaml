@@ -23,29 +23,33 @@ services:
   pwa:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
       args:
         BASE_URL: ${BASE_URL}
-    restart: unless-stopped
     develop:
       watch:
         - path: content
-          action: rebuild
+          target: /build/content
+          action: sync
         - path: nginx
           action: rebuild
         - path: sass
-          action: rebuild
+          target: /build/sass
+          action: sync
         - path: static
-          action: rebuild
+          target: /build/static
+          action: sync
         - path: templates
-          action: rebuild
+          target: /build/templates
+          action: sync
     networks:
-      - pwa
       - traefik
+    restart: unless-stopped
     labels:
       - traefik.enable=true
       - traefik.docker.network=traefik
+      - traefik.http.services.pwa-reachard.loadbalancer.server.port=80
+      - traefik.http.services.wss-pwa-reachard.loadbalancer.server.port=1024
 networks:
-  pwa:
   traefik:
     external: true
