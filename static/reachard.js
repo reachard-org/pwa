@@ -33,31 +33,46 @@ class MainViewHandler {
     profile: "Profile | Reachard",
   };
 
-  async setInitialView() {
+  setView(view) {
+    if (!(view in this.refs)) {
+      return;
+    }
+
+    this.refs[view].checked = true;
+    document.title = this.titles[view];
+  }
+
+  setViewFromURL() {
     const url = new URL(location.href);
     const subpaths = url.pathname.split("/");
     let view = subpaths[1];
     if (view === "") view = "targets";
 
-    if (view in this.refs) {
-      this.refs[view].checked = true;
-      document.title = this.titles[view];
-    }
+    this.setView(view);
   }
 
-  async addEventListeners() {
+  addEventListeners() {
     for (const [view, ref] of Object.entries(this.refs)) {
       ref.addEventListener("change", () => {
         const url = new URL(location.href);
         url.pathname = `/${view}`;
         document.title = this.titles[view];
-        history.pushState({}, "", url);
+        history.pushState(view, "", url);
       });
     }
+
+    window.addEventListener("popstate", (event) => {
+      if (event.state !== undefined && typeof event.state === "string") {
+        const view = event.state;
+        this.setView(view);
+      } else {
+        this.setViewFromURL();
+      }
+    });
   }
 
   async init() {
-    await this.setInitialView();
+    this.setViewFromURL();
     this.addEventListeners();
   }
 }
