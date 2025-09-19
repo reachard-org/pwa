@@ -28,26 +28,29 @@ class MainViewHandler {
     profile: document.getElementById("ref-profile"),
   };
 
+  titles = {
+    targets: "Targets | Reachard",
+    profile: "Profile | Reachard",
+  };
+
   async setInitialView() {
     const url = new URL(location.href);
     const subpaths = url.pathname.split("/");
-    const view = subpaths[1];
-
-    if (view === "") {
-      this.refs.targets.checked = true;
-      return;
-    }
+    let view = subpaths[1];
+    if (view === "") view = "targets";
 
     if (view in this.refs) {
       this.refs[view].checked = true;
+      document.title = this.titles[view];
     }
   }
 
   async addEventListeners() {
-    for (const [name, ref] of Object.entries(this.refs)) {
+    for (const [view, ref] of Object.entries(this.refs)) {
       ref.addEventListener("change", () => {
         const url = new URL(location.href);
-        url.pathname = `/${name}`;
+        url.pathname = `/${view}`;
+        document.title = this.titles[view];
         history.pushState({}, "", url);
       });
     }
