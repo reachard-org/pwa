@@ -22,6 +22,28 @@ const addr = "http://127.0.0.1:7272";
 const sessionEndpoint = `${addr}/v0/session/`;
 const targetsEndpoint = `${addr}/v0/targets/`;
 
+class MainViewHandler {
+  refs = {
+    targets: document.getElementById("ref-targets"),
+    profile: document.getElementById("ref-profile"),
+  };
+
+  async init() {
+    const url = new URL(location.href);
+    const subpaths = url.pathname.split("/");
+    const view = subpaths[1];
+
+    if (view === "") {
+      this.refs.targets.checked = true;
+      return;
+    }
+
+    if (view in this.refs) {
+      this.refs[view].checked = true;
+    }
+  }
+}
+
 class StoreHandler {
   dbName = "reachard";
   version = 1;
@@ -353,6 +375,9 @@ export class TargetsHandler {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  const mainViewHandler = new MainViewHandler();
+  mainViewHandler.init();
+
   const sessionHandler = new SessionHandler();
   sessionHandler.init();
 
