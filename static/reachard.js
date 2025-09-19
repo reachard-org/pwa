@@ -28,7 +28,7 @@ class MainViewHandler {
     profile: document.getElementById("ref-profile"),
   };
 
-  async init() {
+  async setInitialView() {
     const url = new URL(location.href);
     const subpaths = url.pathname.split("/");
     const view = subpaths[1];
@@ -41,6 +41,21 @@ class MainViewHandler {
     if (view in this.refs) {
       this.refs[view].checked = true;
     }
+  }
+
+  async addEventListeners() {
+    for (const [name, ref] of Object.entries(this.refs)) {
+      ref.addEventListener("change", () => {
+        const url = new URL(location.href);
+        url.pathname = `/${name}`;
+        history.pushState({}, "", url);
+      });
+    }
+  }
+
+  async init() {
+    await this.setInitialView();
+    this.addEventListeners();
   }
 }
 
