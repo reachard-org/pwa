@@ -30,6 +30,8 @@ services:
       watch:
         - path: content
           action: rebuild
+        - path: nginx
+          action: rebuild
         - path: sass
           action: rebuild
         - path: static
