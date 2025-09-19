@@ -22,15 +22,19 @@ const addr = "http://127.0.0.1:7272";
 const sessionEndpoint = `${addr}/v0/session/`;
 const targetsEndpoint = `${addr}/v0/targets/`;
 
+class Ref {
+  constructor(name, title, pathname, pathnameRegex) {
+    this.element = document.getElementById(`ref-${name}`);
+    this.title = `${title} | Reachard`;
+    this.pathname = pathname;
+    this.pathnameRegex = pathnameRegex;
+  }
+}
+
 class MainViewHandler {
   refs = {
-    targets: document.getElementById("ref-targets"),
-    profile: document.getElementById("ref-profile"),
-  };
-
-  titles = {
-    targets: "Targets | Reachard",
-    profile: "Profile | Reachard",
+    targets: new Ref("targets", "Targets", "/targets", /^\/targets\/?$/),
+    profile: new Ref("profile", "Profile", "/profile", /^\/profile\/?$/),
   };
 
   setView(view) {
@@ -38,26 +42,32 @@ class MainViewHandler {
       return;
     }
 
-    this.refs[view].checked = true;
-    document.title = this.titles[view];
+    const ref = this.refs[view];
+    ref.element.checked = true;
+    document.title = ref.title;
   }
 
   setViewFromURL() {
     const url = new URL(location.href);
-    const subpaths = url.pathname.split("/");
-    let view = subpaths[1];
-    if (view === "") view = "targets";
+    let view = "targets";
+
+    for (const [name, ref] of Object.entries(this.refs)) {
+      if (ref.pathnameRegex.test(url.pathname)) {
+        view = name;
+        break;
+      }
+    }
 
     this.setView(view);
   }
 
   addEventListeners() {
-    for (const [view, ref] of Object.entries(this.refs)) {
-      ref.addEventListener("change", () => {
+    for (const [name, ref] of Object.entries(this.refs)) {
+      ref.element.addEventListener("change", () => {
         const url = new URL(location.href);
-        url.pathname = `/${view}`;
-        document.title = this.titles[view];
-        history.pushState(view, "", url);
+        url.pathname = ref.pathname;
+        document.title = ref.title;
+        history.pushState(name, "", url);
       });
     }
 
