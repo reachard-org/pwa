@@ -34,6 +34,12 @@ class Ref {
 class MainViewHandler {
   refs = {
     targets: new Ref("targets", "Targets", "/targets", /^\/targets\/?$/),
+    targetsAdd: new Ref(
+      "targets-add",
+      "Add a target",
+      "/targets/add",
+      /^\/targets\/add\/?$/,
+    ),
     profile: new Ref("profile", "Profile", "/profile", /^\/profile\/?$/),
   };
 

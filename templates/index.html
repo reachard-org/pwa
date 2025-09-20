@@ -48,6 +48,7 @@ font-src 'self' https://fonts.gstatic.com; style-src 'self' https://fonts.google
 
 <body>
   <input id="ref-targets" class="ref" type="radio" name="tab">
+  <input id="ref-targets-add" class="ref" type="radio" name="tab">
   <input id="ref-profile" class="ref" type="radio" name="tab">
   <input id="ref-profile-logged-out" class="ref" type="radio" name="login" checked>
   <input id="ref-profile-logged-in" class="ref" type="radio" name="login">
@@ -67,18 +68,10 @@ font-src 'self' https://fonts.gstatic.com; style-src 'self' https://fonts.google
   </nav>
   <main id="views">
     <section id="view-targets" class="view">
-      <header>Targets</header>
-      <div id="targets-add-form-container">
-        <form id="targets-add-form">
-          <label for="name">Name:</label>
-          <input id="name" type="text" autocomplete="off" required>
-          <label for="url">URL:</label>
-          <input id="url" type="url" required>
-          <label for="interval_seconds">Interval (seconds):</label>
-          <input id="interval_seconds" type="number" required>
-        </form>
-        <button type="submit" form="targets-add-form">Add a target</button>
-      </div>
+      <header>
+        Targets
+        <label id="targets-add-view-button" for="ref-targets-add">Add a target</label>
+      </header>
       <div id="targets-delete-form-container">
         <form id="targets-delete-form">
           <label for="id">ID:</label>
@@ -89,6 +82,20 @@ font-src 'self' https://fonts.gstatic.com; style-src 'self' https://fonts.google
       <div id="targets-list-container">
         <button id="targets-list-button">List all targets</button>
         <div id="targets-list"></div>
+      </div>
+    </section>
+    <section id="view-targets-add" class="view">
+      <header>Add a target</header>
+      <div id="targets-add-form-container">
+        <form id="targets-add-form">
+          <label for="name">Name:</label>
+          <input id="name" type="text" autocomplete="off" required>
+          <label for="url">URL:</label>
+          <input id="url" type="url" required>
+          <label for="interval_seconds">Interval (seconds):</label>
+          <input id="interval_seconds" type="number" required>
+        </form>
+        <button type="submit" form="targets-add-form">Add a target</button>
       </div>
     </section>
     <section id="view-profile" class="view">

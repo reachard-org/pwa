@@ -80,6 +80,7 @@ header {
 }
 
 #views {
+  width: 100%;
   padding: 1rem;
 
   > section {
@@ -91,6 +92,18 @@ header {
 
   .view {
     display: none;
+  }
+}
+
+#view-targets {
+  > header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    > #targets-add-view-button {
+      font-size: 1rem;
+    }
   }
 }
 
@@ -115,7 +128,7 @@ header {
   }
 }
 
-$refs: targets, profile, profile-logged-in, profile-logged-out;
+$refs: targets, targets-add, profile, profile-logged-in, profile-logged-out;
 
 @each $ref in $refs {
   #ref-#{$ref}:checked ~ #views #view-#{$ref} {
