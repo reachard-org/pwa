@@ -33,6 +33,14 @@ class View {
     this.ref.checked = true;
     document.title = this.title;
   }
+
+  navigate(pathname) {
+    this.set();
+
+    const url = new URL(location.href);
+    url.pathname = pathname;
+    history.pushState(name, "", url);
+  }
 }
 
 class MainViewHandler {
@@ -78,12 +86,7 @@ class MainViewHandler {
       const name = event.target.dataset.view;
       const view = this.views[name];
 
-      const url = new URL(location.href);
-      url.pathname = event.target.pathname;
-      document.title = view.title;
-      history.pushState(name, "", url);
-
-      view.set();
+      view.navigate(event.target.pathname);
     });
 
     window.addEventListener("popstate", (event) => {
