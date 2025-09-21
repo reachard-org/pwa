@@ -133,7 +133,8 @@ header {
   }
 }
 
-$refs: targets, targets-add, profile, profile-logged-in, profile-logged-out;
+$refs:
+  target, targets, targets-add, profile, profile-logged-in, profile-logged-out;
 
 @each $ref in $refs {
   #ref-#{$ref}:checked ~ #views #view-#{$ref} {

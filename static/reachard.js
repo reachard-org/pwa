@@ -37,6 +37,7 @@ class View {
 
 class MainViewHandler {
   views = {
+    target: new View("target", "Target", /^\/targets\/[0-9]+\/?$/),
     targets: new View("targets", "Targets", /^\/targets\/?$/),
     "targets-add": new View(
       "targets-add",
@@ -359,7 +360,10 @@ export class TargetsHandler {
       const row = template.content.cloneNode(true);
       let td = row.querySelectorAll("td");
 
-      td[0].textContent = target.name;
+      let a = td[0].querySelector("a");
+      a.href = `/target/${target.id}`;
+      a.textContent = target.name;
+
       td[1].textContent = target.url;
       td[2].textContent = target.interval_seconds;
 

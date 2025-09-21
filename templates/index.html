@@ -47,6 +47,7 @@ font-src 'self' https://fonts.gstatic.com; style-src 'self' https://fonts.google
 </head>
 
 <body>
+  <input id="ref-target" class="ref" type="radio" name="tab">
   <input id="ref-targets" class="ref" type="radio" name="tab">
   <input id="ref-targets-add" class="ref" type="radio" name="tab">
   <input id="ref-profile" class="ref" type="radio" name="tab">
@@ -67,6 +68,9 @@ font-src 'self' https://fonts.gstatic.com; style-src 'self' https://fonts.google
     </div>
   </nav>
   <main id="views">
+    <section id="view-target" class="view">
+      <header>Target</header>
+    </section>
     <section id="view-targets" class="view">
       <header>
         Targets
@@ -93,7 +97,7 @@ font-src 'self' https://fonts.gstatic.com; style-src 'self' https://fonts.google
           </thead>
           <template id="targets-table-row-template">
             <tr>
-              <td></td>
+              <td><a class="view-button" data-view="target"></a></td>
               <td></td>
               <td></td>
             </tr>
