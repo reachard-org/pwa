@@ -56,21 +56,23 @@ font-src 'self' https://fonts.gstatic.com; style-src 'self' https://fonts.google
   <nav id="sidebar">
     <header>Reachard</header>
     <div class="sidebar-section">
-      <label class="sidebar-tab" for="ref-targets">
+      <a class="sidebar-tab view-button" data-view="targets" href="/targets">
         <img src="{{ get_url(path='icons/reachard-targets.svg') }}" alt="">
         Targets
-      </label>
-      <label class="sidebar-tab" for="ref-profile">
+      </a>
+      <a class="sidebar-tab view-button" data-view="profile" href="/profile">
         <img src="{{ get_url(path='icons/reachard-profile.svg') }}" alt="">
         Profile
-      </label>
+      </a>
     </div>
   </nav>
   <main id="views">
     <section id="view-targets" class="view">
       <header>
         Targets
-        <label id="targets-add-view-button" for="ref-targets-add">Add a target</label>
+        <a id="targets-add-view-button" class="view-button" data-view="targets-add" href="/targets/add">
+          Add a target
+        </a>
       </header>
       <div id="targets-delete-form-container">
         <form id="targets-delete-form">

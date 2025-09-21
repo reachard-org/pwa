@@ -23,24 +23,22 @@ const sessionEndpoint = `${addr}/v0/session/`;
 const targetsEndpoint = `${addr}/v0/targets/`;
 
 class Ref {
-  constructor(name, title, pathname, pathnameRegex) {
+  constructor(name, title, pathnameRegex) {
     this.element = document.getElementById(`ref-${name}`);
     this.title = `${title} | Reachard`;
-    this.pathname = pathname;
     this.pathnameRegex = pathnameRegex;
   }
 }
 
 class MainViewHandler {
   refs = {
-    targets: new Ref("targets", "Targets", "/targets", /^\/targets\/?$/),
-    targetsAdd: new Ref(
+    targets: new Ref("targets", "Targets", /^\/targets\/?$/),
+    "targets-add": new Ref(
       "targets-add",
       "Add a target",
-      "/targets/add",
       /^\/targets\/add\/?$/,
     ),
-    profile: new Ref("profile", "Profile", "/profile", /^\/profile\/?$/),
+    profile: new Ref("profile", "Profile", /^\/profile\/?$/),
   };
 
   setView(view) {
@@ -68,12 +66,20 @@ class MainViewHandler {
   }
 
   addEventListeners() {
-    for (const [name, ref] of Object.entries(this.refs)) {
-      ref.element.addEventListener("change", () => {
+    const viewButtons = document.getElementsByClassName("view-button");
+    for (const viewButton of viewButtons) {
+      viewButton.addEventListener("click", (event) => {
+        event.preventDefault();
+
+        const view = event.target.dataset.view;
+        const ref = this.refs[view];
+
         const url = new URL(location.href);
-        url.pathname = ref.pathname;
+        url.pathname = event.target.pathname;
         document.title = ref.title;
         history.pushState(name, "", url);
+
+        this.setView(view);
       });
     }
 
