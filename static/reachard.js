@@ -67,22 +67,23 @@ class MainViewHandler {
   }
 
   addEventListeners() {
-    const viewButtons = document.getElementsByClassName("view-button");
-    for (const viewButton of viewButtons) {
-      viewButton.addEventListener("click", (event) => {
-        event.preventDefault();
+    document.body.addEventListener("click", (event) => {
+      if (!event.target.matches(".view-button")) {
+        return;
+      }
 
-        const name = event.target.dataset.view;
-        const view = this.views[name];
+      event.preventDefault();
 
-        const url = new URL(location.href);
-        url.pathname = event.target.pathname;
-        document.title = view.title;
-        history.pushState(name, "", url);
+      const name = event.target.dataset.view;
+      const view = this.views[name];
 
-        view.setView();
-      });
-    }
+      const url = new URL(location.href);
+      url.pathname = event.target.pathname;
+      document.title = view.title;
+      history.pushState(name, "", url);
+
+      view.setView();
+    });
 
     window.addEventListener("popstate", (event) => {
       if (event.state !== undefined && typeof event.state === "string") {
