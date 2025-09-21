@@ -29,7 +29,7 @@ class View {
     this.pathnameRegex = pathnameRegex;
   }
 
-  setView() {
+  set() {
     this.ref.checked = true;
     document.title = this.title;
   }
@@ -53,7 +53,7 @@ class MainViewHandler {
     }
 
     const view = this.views[name];
-    view.setView();
+    view.set();
   }
 
   setViewFromURL() {
@@ -83,7 +83,7 @@ class MainViewHandler {
       document.title = view.title;
       history.pushState(name, "", url);
 
-      view.setView();
+      view.set();
     });
 
     window.addEventListener("popstate", (event) => {
