@@ -22,47 +22,48 @@ const addr = "http://127.0.0.1:7272";
 const sessionEndpoint = `${addr}/v0/session/`;
 const targetsEndpoint = `${addr}/v0/targets/`;
 
-class Ref {
-  constructor(name, title, pathnameRegex) {
-    this.element = document.getElementById(`ref-${name}`);
+class View {
+  constructor(refName, title, pathnameRegex) {
+    this.ref = document.getElementById(`ref-${refName}`);
     this.title = `${title} | Reachard`;
     this.pathnameRegex = pathnameRegex;
+  }
+
+  setView() {
+    this.ref.checked = true;
+    document.title = this.title;
   }
 }
 
 class MainViewHandler {
-  refs = {
-    targets: new Ref("targets", "Targets", /^\/targets\/?$/),
-    "targets-add": new Ref(
+  views = {
+    targets: new View("targets", "Targets", /^\/targets\/?$/),
+    "targets-add": new View(
       "targets-add",
       "Add a target",
       /^\/targets\/add\/?$/,
     ),
-    profile: new Ref("profile", "Profile", /^\/profile\/?$/),
+    profile: new View("profile", "Profile", /^\/profile\/?$/),
   };
 
-  setView(view) {
-    if (!(view in this.refs)) {
+  setView(name) {
+    if (!(name in this.views)) {
       return;
     }
 
-    const ref = this.refs[view];
-    ref.element.checked = true;
-    document.title = ref.title;
+    const view = this.views[name];
+    view.setView();
   }
 
   setViewFromURL() {
     const url = new URL(location.href);
-    let view = "targets";
 
-    for (const [name, ref] of Object.entries(this.refs)) {
-      if (ref.pathnameRegex.test(url.pathname)) {
-        view = name;
+    for (const [name, view] of Object.entries(this.views)) {
+      if (view.pathnameRegex.test(url.pathname)) {
+        this.setView(name);
         break;
       }
     }
-
-    this.setView(view);
   }
 
   addEventListeners() {
@@ -71,22 +72,22 @@ class MainViewHandler {
       viewButton.addEventListener("click", (event) => {
         event.preventDefault();
 
-        const view = event.target.dataset.view;
-        const ref = this.refs[view];
+        const name = event.target.dataset.view;
+        const view = this.views[name];
 
         const url = new URL(location.href);
         url.pathname = event.target.pathname;
-        document.title = ref.title;
+        document.title = view.title;
         history.pushState(name, "", url);
 
-        this.setView(view);
+        view.setView();
       });
     }
 
     window.addEventListener("popstate", (event) => {
       if (event.state !== undefined && typeof event.state === "string") {
-        const view = event.state;
-        this.setView(view);
+        const name = event.state;
+        this.setView(name);
       } else {
         this.setViewFromURL();
       }
