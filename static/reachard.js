@@ -280,22 +280,12 @@ export class SessionHandler {
   }
 }
 
-class TargetHandler {
-  constructor(target) {
-    this.target = target;
-  }
-
-  render() {
-    const element = document.createElement("p");
-    element.innerHTML = JSON.stringify(this.target);
-    return element;
-  }
-}
-
 export class TargetsHandler {
-  targets = [];
   elements = {
-    targetsList: document.getElementById("targets-list"),
+    targetsTableBody: document.getElementById("targets-table-body"),
+    targetsTableRowTemplate: document.getElementById(
+      "targets-table-row-template",
+    ),
   };
 
   async init() {
@@ -350,23 +340,22 @@ export class TargetsHandler {
 
     const targets = responseObject;
 
-    this.elements.targetsList.innerHTML = "";
+    this.elements.targetsTableBody.innerHTML = "";
 
     if (targets.length === 0) {
-      const child = document.createElement("p");
-      child.innerHTML = "No targets.";
-      this.elements.targetsList.appendChild(child);
-
       return;
     }
 
-    this.targets = [];
     for (const target of targets) {
-      const targetHandler = new TargetHandler(target, this.elements);
-      this.targets.push(target);
+      const template = this.elements.targetsTableRowTemplate;
+      const row = template.content.cloneNode(true);
+      let td = row.querySelectorAll("td");
 
-      const child = targetHandler.render();
-      this.elements.targetsList.appendChild(child);
+      td[0].textContent = target.name;
+      td[1].textContent = target.url;
+      td[2].textContent = target.interval_seconds;
+
+      this.elements.targetsTableBody.appendChild(row);
     }
   }
 
