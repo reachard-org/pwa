@@ -29,23 +29,54 @@ class View {
     this.pathnameRegex = pathnameRegex;
   }
 
-  set() {
+  async set(_data) {
     this.ref.checked = true;
     document.title = this.title;
   }
+}
 
-  navigate(pathname) {
-    this.set();
+class TargetView extends View {
+  element = document.getElementById("view-target");
 
-    const url = new URL(location.href);
-    url.pathname = pathname;
-    history.pushState(name, "", url);
+  constructor() {
+    super("target", "Targets", /^\/target\/([0-9]+)\/?$/);
+  }
+
+  async update(id) {
+    const authStoreHandler = new AuthStoreHandler();
+    const sessionToken = await authStoreHandler.getSessionToken();
+
+    if (sessionToken === "") {
+      return;
+    }
+
+    const response = await fetch(`${targetsEndpoint}${id}/`, {
+      headers: {
+        Authorization: `Bearer ${sessionToken}`,
+      },
+    });
+
+    const target = await response.json();
+
+    const header = this.element.querySelector("header");
+    const spans = this.element.querySelectorAll("span");
+
+    header.textContent = target.name;
+    spans[0].textContent = target.url;
+    spans[1].textContent = target.interval_seconds;
+  }
+
+  async set(data) {
+    const id = data[0];
+    await this.update(id);
+
+    super.set(data);
   }
 }
 
 class MainViewHandler {
   views = {
-    target: new View("target", "Target", /^\/targets\/[0-9]+\/?$/),
+    target: new TargetView(),
     targets: new View("targets", "Targets", /^\/targets\/?$/),
     "targets-add": new View(
       "targets-add",
@@ -55,21 +86,23 @@ class MainViewHandler {
     profile: new View("profile", "Profile", /^\/profile\/?$/),
   };
 
-  setView(name) {
-    if (!(name in this.views)) {
-      return;
-    }
-
+  setView(name, pathname) {
     const view = this.views[name];
-    view.set();
+
+    const matches = view.pathnameRegex.exec(pathname);
+    const data = matches.slice(1);
+
+    view.set(data);
   }
 
   setViewFromURL() {
     const url = new URL(location.href);
 
-    for (const [name, view] of Object.entries(this.views)) {
-      if (view.pathnameRegex.test(url.pathname)) {
-        this.setView(name);
+    for (const view of Object.values(this.views)) {
+      const matches = view.pathnameRegex.exec(url.pathname);
+      if (matches !== null) {
+        const data = matches.slice(1);
+        view.set(data);
         break;
       }
     }
@@ -81,18 +114,26 @@ class MainViewHandler {
         return;
       }
 
+      if (event.ctrlKey) {
+        return;
+      }
+
       event.preventDefault();
 
       const name = event.target.dataset.view;
-      const view = this.views[name];
+      const pathname = event.target.pathname;
+      this.setView(name, pathname);
 
-      view.navigate(event.target.pathname);
+      const url = new URL(location.href);
+      url.pathname = event.target.pathname;
+      history.pushState(name, "", url);
     });
 
     window.addEventListener("popstate", (event) => {
       if (event.state !== undefined && typeof event.state === "string") {
         const name = event.state;
-        this.setView(name);
+        const pathname = event.target.document.location.pathname;
+        this.setView(name, pathname);
       } else {
         this.setViewFromURL();
       }
