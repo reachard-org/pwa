@@ -72,6 +72,7 @@ font-src 'self' https://fonts.gstatic.com; style-src 'self' https://fonts.google
       <header></header>
       <span></span>
       <p>Interval is set to <span></span>s.</p>
+      <button id="target-delete-button">Delete the target</button>
     </section>
     <section id="view-targets" class="view">
       <header>
@@ -80,13 +81,6 @@ font-src 'self' https://fonts.gstatic.com; style-src 'self' https://fonts.google
           Add a target
         </a>
       </header>
-      <div id="targets-delete-form-container">
-        <form id="targets-delete-form">
-          <label for="id">ID:</label>
-          <input id="id" type="number" required>
-        </form>
-        <button type="submit" form="targets-delete-form">Delete the target</button>
-      </div>
       <div id="targets-list-container">
         <button id="targets-list-button">List all targets</button>
         <table id="targets-table">

@@ -127,10 +127,6 @@ header {
     gap: 1em;
     width: fit-content;
   }
-
-  > button {
-    width: fit-content;
-  }
 }
 
 $refs:
@@ -150,4 +146,8 @@ table {
     padding: 0.75em 1em;
     text-align: left;
   }
+}
+
+button {
+  width: fit-content;
 }

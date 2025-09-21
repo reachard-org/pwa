@@ -29,6 +29,8 @@ class View {
     this.pathnameRegex = pathnameRegex;
   }
 
+  async init() {}
+
   async set(_data) {
     this.ref.checked = true;
     document.title = this.title;
@@ -40,6 +42,33 @@ class TargetView extends View {
 
   constructor() {
     super("target", "Targets", /^\/target\/([0-9]+)\/?$/);
+  }
+
+  async deleteTarget(event) {
+    const authStoreHandler = new AuthStoreHandler();
+    const sessionToken = await authStoreHandler.getSessionToken();
+
+    if (sessionToken === "") {
+      return;
+    }
+
+    const id = event.target.dataset.id;
+    await fetch(`${targetsEndpoint}${id}/`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${sessionToken}`,
+      },
+    });
+
+    const targetsView = new TargetsView();
+    targetsView.set();
+  }
+
+  async init() {
+    const targetDeleteButton = document.getElementById("target-delete-button");
+    targetDeleteButton.addEventListener("click", (event) =>
+      this.deleteTarget(event),
+    );
   }
 
   async update(id) {
@@ -60,10 +89,12 @@ class TargetView extends View {
 
     const header = this.element.querySelector("header");
     const spans = this.element.querySelectorAll("span");
+    const deleteButton = this.element.querySelector("button");
 
     header.textContent = target.name;
     spans[0].textContent = target.url;
     spans[1].textContent = target.interval_seconds;
+    deleteButton.dataset.id = id;
   }
 
   async set(data) {
@@ -74,10 +105,16 @@ class TargetView extends View {
   }
 }
 
+class TargetsView extends View {
+  constructor() {
+    super("targets", "Targets", /^\/targets\/?$/);
+  }
+}
+
 class MainViewHandler {
   views = {
     target: new TargetView(),
-    targets: new View("targets", "Targets", /^\/targets\/?$/),
+    targets: new TargetsView(),
     "targets-add": new View(
       "targets-add",
       "Add a target",
@@ -143,6 +180,10 @@ class MainViewHandler {
   async init() {
     this.setViewFromURL();
     this.addEventListeners();
+
+    for (const view of Object.values(this.views)) {
+      view.init();
+    }
   }
 }
 
@@ -351,11 +392,6 @@ export class TargetsHandler {
     targetsAddForm.addEventListener("submit", (event) =>
       this.postTarget(event),
     );
-
-    const targetsDeleteForm = document.getElementById("targets-delete-form");
-    targetsDeleteForm.addEventListener("submit", (event) =>
-      this.deleteTarget(event),
-    );
   }
 
   async listTargets() {
@@ -436,29 +472,6 @@ export class TargetsHandler {
 
     await fetch(targetsEndpoint, {
       method: "POST",
-      headers: {
-        Authorization: `Bearer ${sessionToken}`,
-        "Content-Type": "application/json",
-      },
-      body: json,
-    });
-  }
-
-  async deleteTarget(event) {
-    event.preventDefault();
-
-    const authStoreHandler = new AuthStoreHandler();
-    const sessionToken = await authStoreHandler.getSessionToken();
-
-    if (sessionToken === "") {
-      return;
-    }
-
-    const form = event.target;
-    const json = JSON.stringify(form.id.valueAsNumber);
-
-    await fetch(targetsEndpoint, {
-      method: "DELETE",
       headers: {
         Authorization: `Bearer ${sessionToken}`,
         "Content-Type": "application/json",
