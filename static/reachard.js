@@ -18,6 +18,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import uPlot from "https://cdn.jsdelivr.net/npm/uplot@1/+esm";
+
 const addr = "http://127.0.0.1:7272";
 const sessionEndpoint = `${addr}/v0/session/`;
 const targetsEndpoint = `${addr}/v0/targets/`;
@@ -71,6 +73,74 @@ class TargetView extends View {
     );
   }
 
+  async showCheckResults(id) {
+    const authStoreHandler = new AuthStoreHandler();
+    const sessionToken = await authStoreHandler.getSessionToken();
+
+    if (sessionToken === "") {
+      return;
+    }
+
+    const response = await fetch(`${targetsEndpoint}${id}/checks/`, {
+      headers: {
+        Authorization: `Bearer ${sessionToken}`,
+      },
+    });
+
+    const checkResults = await response.json();
+
+    let data = [checkResults.timestamps, checkResults.latencies];
+
+    console.log(data);
+
+    let opts = {
+      title: "Response time",
+      id: "chart1",
+      class: "my-chart",
+      width: 600,
+      height: 600,
+      series: [
+        {},
+        {
+          label: "Response time, ns",
+          stroke: "green",
+          fill: "rgb(0, 125, 0, 0.3)",
+          paths: uPlot.paths.bars({ size: [1, 100] }),
+          gaps: (u, sidx, idx0, idx1, nullGaps) => {
+            const isNum = Number.isFinite;
+            const delta = 5;
+
+            let xData = u.data[0];
+            let yData = u.data[sidx];
+
+            let addlGaps = [];
+
+            for (let i = idx0 + 1; i <= idx1; i++) {
+              if (isNum(yData[i]) && isNum(yData[i - 1])) {
+                if (xData[i] - xData[i - 1] > delta) {
+                  uPlot.addGap(
+                    addlGaps,
+                    Math.round(u.valToPos(xData[i - 1], "x", true)),
+                    Math.round(u.valToPos(xData[i], "x", true)),
+                  );
+                }
+              }
+            }
+
+            nullGaps.push(...addlGaps);
+            nullGaps.sort((a, b) => a[0] - b[0]);
+
+            return nullGaps;
+          },
+        },
+      ],
+    };
+
+    const targetCheckResults = document.getElementById("target-check-results");
+    targetCheckResults.innerHTML = "";
+    new uPlot(opts, data, targetCheckResults);
+  }
+
   async update(id) {
     const authStoreHandler = new AuthStoreHandler();
     const sessionToken = await authStoreHandler.getSessionToken();
@@ -95,6 +165,8 @@ class TargetView extends View {
     spans[0].textContent = target.url;
     spans[1].textContent = target.interval_seconds;
     deleteButton.dataset.id = id;
+
+    this.showCheckResults(id);
   }
 
   async set(data) {

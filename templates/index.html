@@ -24,7 +24,9 @@ SPDX-License-Identifier: Apache-2.0
 <html lang="en">
 
 {% set csp = "default-src 'none'; img-src 'self'; base-uri 'none'; form-action 'none';
-font-src 'self' https://fonts.gstatic.com; style-src 'self' https://fonts.googleapis.com; script-src 'self'" %}
+font-src 'self' https://fonts.gstatic.com;
+style-src 'self' https://fonts.googleapis.com https://cdn.jsdelivr.net/npm/uplot@1/dist/uPlot.min.css;
+script-src 'self' https://cdn.jsdelivr.net/npm/uplot@1/+esm " %}
 
 {% if config.mode == "serve" %}
 {% set csp = csp ~ "; connect-src http: https: ws: wss:;" %}
@@ -42,6 +44,7 @@ font-src 'self' https://fonts.gstatic.com; style-src 'self' https://fonts.google
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uplot@1/dist/uPlot.min.css">
   <title>Reachard</title>
   <script type="module" src="{{ get_url(path='reachard.js') }}"></script>
 </head>
@@ -73,6 +76,7 @@ font-src 'self' https://fonts.gstatic.com; style-src 'self' https://fonts.google
       <span></span>
       <p>Interval is set to <span></span>s.</p>
       <button id="target-delete-button">Delete the target</button>
+      <div id="target-check-results"></div>
     </section>
     <section id="view-targets" class="view">
       <header>
