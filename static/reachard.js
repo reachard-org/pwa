@@ -81,7 +81,12 @@ class TargetView extends View {
       return;
     }
 
-    const response = await fetch(`${targetsEndpoint}${id}/checks/`, {
+    const url = new URL(`${targetsEndpoint}${id}/checks/`);
+
+    const since = Math.floor(Date.now() / 1000) - 60 * 60;
+    url.searchParams.append("since", since);
+
+    const response = await fetch(url, {
       headers: {
         Authorization: `Bearer ${sessionToken}`,
       },
