@@ -103,7 +103,7 @@ class TargetView extends View {
           label: "Response time, ms",
           stroke: "green",
           fill: "rgb(0, 125, 0, 0.3)",
-          paths: uPlot.paths.bars({ size: [1, 100] }),
+          paths: uPlot.paths.spline(),
           gaps: (u, sidx, idx0, idx1, nullGaps) => {
             const isNum = Number.isFinite;
             const delta = 5;
