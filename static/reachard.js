@@ -91,8 +91,6 @@ class TargetView extends View {
 
     let data = [checkResults.timestamps, checkResults.latencies];
 
-    console.log(data);
-
     let opts = {
       title: "Response time",
       id: "chart1",
@@ -102,7 +100,7 @@ class TargetView extends View {
       series: [
         {},
         {
-          label: "Response time, ns",
+          label: "Response time, ms",
           stroke: "green",
           fill: "rgb(0, 125, 0, 0.3)",
           paths: uPlot.paths.bars({ size: [1, 100] }),
