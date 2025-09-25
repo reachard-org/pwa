@@ -83,8 +83,15 @@ class TargetView extends View {
 
     const url = new URL(`${targetsEndpoint}${id}/checks/`);
 
-    const since = Math.floor(Date.now() / 1000) - 60 * 60;
+    const duration = 60 * 60;
+    const defaultStep = 5;
+    const displayedStep = 60;
+
+    const since = Math.floor(Date.now() / 1000) - duration;
     url.searchParams.append("since", since);
+
+    const step = Math.floor(displayedStep / defaultStep);
+    url.searchParams.append("step", step);
 
     const response = await fetch(url, {
       headers: {
@@ -111,7 +118,7 @@ class TargetView extends View {
           paths: uPlot.paths.spline(),
           gaps: (u, sidx, idx0, idx1, nullGaps) => {
             const isNum = Number.isFinite;
-            const delta = 5;
+            const delta = displayedStep;
 
             let xData = u.data[0];
             let yData = u.data[sidx];
