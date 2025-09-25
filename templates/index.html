@@ -71,76 +71,10 @@ script-src 'self' https://cdn.jsdelivr.net/npm/uplot@1/+esm " %}
     </div>
   </nav>
   <main id="views">
-    <section id="view-target" class="view">
-      <header></header>
-      <span></span>
-      <p>Interval is set to <span></span>s.</p>
-      <button id="target-delete-button">Delete the target</button>
-      <div id="target-check-results"></div>
-    </section>
-    <section id="view-targets" class="view">
-      <header>
-        Targets
-        <a id="targets-add-view-button" class="view-button" data-view="targets-add" href="/targets/add">
-          Add a target
-        </a>
-      </header>
-      <div id="targets-list-container">
-        <button id="targets-list-button">List all targets</button>
-        <table id="targets-table">
-          <thead>
-            <tr>
-              <th scope="col">Name</th>
-              <th scope="col">URL</th>
-              <th scope="col">Interval</th>
-            </tr>
-          </thead>
-          <template id="targets-table-row-template">
-            <tr>
-              <td><a class="view-button" data-view="target"></a></td>
-              <td></td>
-              <td></td>
-            </tr>
-          </template>
-          <tbody id="targets-table-body">
-          </tbody>
-        </table>
-      </div>
-    </section>
-    <section id="view-targets-add" class="view">
-      <header>Add a target</header>
-      <div id="targets-add-form-container">
-        <form id="targets-add-form">
-          <label for="name">Name:</label>
-          <input id="name" type="text" autocomplete="off" required>
-          <label for="url">URL:</label>
-          <input id="url" type="url" required>
-          <label for="interval_seconds">Interval (seconds):</label>
-          <input id="interval_seconds" type="number" required>
-        </form>
-        <button type="submit" form="targets-add-form">Add a target</button>
-      </div>
-    </section>
-    <section id="view-profile" class="view">
-      <header>Profile</header>
-      <section id="view-profile-logged-out" class="view">
-        <div id="session-log-in-form-container">
-          <form id="session-log-in-form">
-            <label for="username">Username:</label>
-            <input id="username" type="text" autocomplete="username" required>
-            <label for="password">Password:</label>
-            <input id="password" type="password" required>
-          </form>
-          <button type="submit" form="session-log-in-form">Log in</button>
-        </div>
-      </section>
-      <section id="view-profile-logged-in" class="view">
-        <div id="session-logged-in-container">
-          <p>You are logged in.</p>
-          <button id="session-log-out-button">Log out</button>
-        </div>
-      </section>
-    </section>
+    {% include "views/target.html" %}
+    {% include "views/targets.html" %}
+    {% include "views/targets-add.html" %}
+    {% include "views/profile.html" %}
   </main>
 </body>
 
