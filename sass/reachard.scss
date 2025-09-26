@@ -20,6 +20,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+@use "views/target";
+
 body {
   display: flex;
   flex-direction: row;
