@@ -55,6 +55,7 @@ services:
       dockerfile: Dockerfile.dev
       args:
         BASE_URL: ${BASE_URL}
+    restart: unless-stopped
     develop:
       watch:
         - path: content
@@ -73,7 +74,6 @@ services:
           action: sync
     networks:
       - traefik
-    restart: unless-stopped
     labels:
       - traefik.enable=true
       - traefik.docker.network=traefik
