@@ -20,7 +20,9 @@
 
 name: reachard-pwa
 services:
-  pwa:
+  pwa-production:
+    profiles:
+      - production
     build:
       context: .
       dockerfile: Dockerfile
@@ -40,12 +42,43 @@ services:
         - path: templates
           action: rebuild
     networks:
-      - pwa
       - traefik
     labels:
       - traefik.enable=true
       - traefik.docker.network=traefik
+      - traefik.http.services.pwa-reachard.loadbalancer.server.port=80
+  pwa-development:
+    profiles:
+      - development
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+      args:
+        BASE_URL: ${BASE_URL}
+    develop:
+      watch:
+        - path: content
+          target: /build/content
+          action: sync
+        - path: nginx
+          action: rebuild
+        - path: sass
+          target: /build/sass
+          action: sync
+        - path: static
+          target: /build/static
+          action: sync
+        - path: templates
+          target: /build/templates
+          action: sync
+    networks:
+      - traefik
+    restart: unless-stopped
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=traefik
+      - traefik.http.services.pwa-reachard.loadbalancer.server.port=80
+      - traefik.http.services.wss-pwa-reachard.loadbalancer.server.port=1024
 networks:
-  pwa:
   traefik:
     external: true
