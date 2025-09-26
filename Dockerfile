@@ -32,6 +32,6 @@ RUN --mount=type=bind,source=.,target=src \
 
 FROM docker.io/nginx:1-alpine-slim
 
-COPY nginx/default.conf /etc/nginx/conf.d/default.conf
+COPY docker/default.conf /etc/nginx/conf.d/default.conf
 
 COPY --from=builder /build/output /usr/share/nginx/html
