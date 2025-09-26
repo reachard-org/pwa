@@ -81,7 +81,7 @@ class TargetView extends View {
       return;
     }
 
-    const url = new URL(`${targetsEndpoint}${id}/checks/`);
+    const url = new URL(`${targetsEndpoint}${id}/latencies/`);
 
     const duration = 60 * 60;
     const defaultStep = 5;
@@ -99,9 +99,9 @@ class TargetView extends View {
       },
     });
 
-    const checkResults = await response.json();
+    const latencies = await response.json();
 
-    let data = [checkResults.timestamps, checkResults.latencies];
+    let data = [latencies.timestamps, latencies.values];
 
     let opts = {
       title: "Response time",
