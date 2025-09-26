@@ -115,7 +115,8 @@ class TargetView extends View {
           label: "Response time, ms",
           stroke: "green",
           fill: "rgb(0, 125, 0, 0.3)",
-          paths: uPlot.paths.spline(),
+          paths: uPlot.paths.bars(),
+          points: { show: false },
           gaps: (u, sidx, idx0, idx1, nullGaps) => {
             const isNum = Number.isFinite;
             const delta = displayedStep;
