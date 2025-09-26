@@ -20,7 +20,7 @@
 
 import uPlot from "https://cdn.jsdelivr.net/npm/uplot@1/+esm";
 
-const addr = "http://127.0.0.1:7272";
+const addr = "https://api.reachard.lan.paveloom.dev";
 const sessionEndpoint = `${addr}/v0/session/`;
 const targetsEndpoint = `${addr}/v0/targets/`;
 
