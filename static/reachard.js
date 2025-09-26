@@ -225,6 +225,8 @@ class MainViewHandler {
         break;
       }
     }
+
+    this.views.targets.set([]);
   }
 
   addEventListeners() {
