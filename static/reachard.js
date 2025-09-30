@@ -73,7 +73,57 @@ class TargetView extends View {
     );
   }
 
-  async showCheckResults(id) {
+  async updateIncidentsWidget(id, timeAdded) {
+    const authStoreHandler = new AuthStoreHandler();
+    const sessionToken = await authStoreHandler.getSessionToken();
+
+    if (sessionToken === "") {
+      return;
+    }
+
+    const url = new URL(`${targetsEndpoint}${id}/incidents/`);
+
+    const now = Math.floor(Date.now() / 1000);
+    const ageHours = Math.floor((now - timeAdded) / (60 * 60));
+    const duration = 60 * 60 * 24;
+
+    const since = now - duration;
+    url.searchParams.append("since", since);
+
+    const response = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${sessionToken}`,
+      },
+    });
+
+    const incidents = await response.json();
+
+    const buckets = new Array(24).fill(false);
+    for (const timestamp of incidents.timestamps) {
+      const hourAgo = Math.floor((now - timestamp) / (60 * 60));
+      buckets[hourAgo] = true;
+    }
+
+    const targetIncidents = document.getElementById("target-incidents");
+    const rects = targetIncidents.querySelectorAll("rect");
+
+    for (let h = 0; h < 24; h++) {
+      const rect = rects[23 - h];
+
+      if (h > ageHours) {
+        rect.style.fill = "";
+        continue;
+      }
+
+      if (buckets[h]) {
+        rect.style.fill = "red";
+      } else {
+        rect.style.fill = "green";
+      }
+    }
+  }
+
+  async updateLatenciesWidget(id) {
     const authStoreHandler = new AuthStoreHandler();
     const sessionToken = await authStoreHandler.getSessionToken();
 
@@ -177,7 +227,8 @@ class TargetView extends View {
     spans[1].textContent = target.interval_seconds;
     deleteButton.dataset.id = id;
 
-    this.showCheckResults(id);
+    this.updateIncidentsWidget(id, target.time_added);
+    this.updateLatenciesWidget(id);
   }
 
   async set(data) {
