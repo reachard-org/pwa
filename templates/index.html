@@ -29,9 +29,9 @@ style-src 'self' https://fonts.googleapis.com https://cdn.jsdelivr.net/npm/uplot
 script-src 'self' https://cdn.jsdelivr.net/npm/uplot@1/+esm " %}
 
 {% if config.mode == "serve" %}
-{% set csp = csp ~ "; connect-src http: https: ws: wss:;" %}
+{% set csp = csp ~ "; connect-src https: wss:;" %}
 {% else %}
-{% set csp = csp ~ "; connect-src http: https:;"%}
+{% set csp = csp ~ "; connect-src https:;"%}
 {% endif %}
 
 <head>
