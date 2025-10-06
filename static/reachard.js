@@ -274,7 +274,7 @@ class MainViewHandler {
       if (matches !== null) {
         const data = matches.slice(1);
         view.set(data);
-        break;
+        return;
       }
     }
 
