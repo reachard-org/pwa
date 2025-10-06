@@ -472,13 +472,17 @@ export class SessionHandler {
 
     window.sessionStorage.setItem("codeVerifier", codeVerifier);
 
-    const authorizeURI = new URL(form.endpoint.value + "/v0/authorize/");
-    authorizeURI.searchParams.set("response_type", "code");
-    authorizeURI.searchParams.set("client_id", "Reachard PWA");
-    authorizeURI.searchParams.set("code_challenge", codeChallenge);
-    authorizeURI.searchParams.set("code_challenge_method", "S256");
-    authorizeURI.searchParams.set("redirect_uri", window.location.origin);
-    authorizeURI.searchParams.set("scope", "all");
+    const searchParams = new URLSearchParams({
+      response_type: "code",
+      client_id: "Reachard PWA",
+      code_challenge: codeChallenge,
+      code_challenge_method: "S256",
+      redirect_uri: window.location.origin,
+      scope: "all",
+    });
+    const authorizeURI = new URL(
+      form.endpoint.value + `/v0/authorize/?${searchParams.toString()}`,
+    );
 
     window.location = authorizeURI;
   }
