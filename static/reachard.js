@@ -431,18 +431,35 @@ export class SessionHandler {
     }
   }
 
-  async init() {
-    const sessionLogInForm = document.getElementById("session-log-in-form");
-    sessionLogInForm.addEventListener("submit", (event) => this.logIn(event));
+  static base64URLEncode(bytes) {
+    const binaryString = Array.from(bytes, (byte) =>
+      String.fromCodePoint(byte),
+    ).join("");
+    return btoa(binaryString)
+      .replace(/\+/g, "-")
+      .replace(/\//g, "_")
+      .replace(/=/g, "");
+  }
 
-    const sessionLogOutButton = document.getElementById(
-      "session-log-out-button",
-    );
-    sessionLogOutButton.addEventListener("click", (event) =>
-      this.logOut(event),
-    );
+  /**
+   * Generates a PKCE pair, according to the current OAuth 2.1 specification.
+   *
+   * A random number generator is used to create a 96-octet sequence that is
+   * then base64url-encoded to produce a 128-octet URL-safe string to use as
+   * the code verifier.
+   */
+  static async generatePKCEPair() {
+    const randomBytes = crypto.getRandomValues(new Uint8Array(96));
 
-    this.checkLoginStatus();
+    const codeVerifier = this.base64URLEncode(randomBytes);
+    const codeVerifierBytes = new TextEncoder().encode(codeVerifier);
+
+    const digest = await crypto.subtle.digest("SHA-256", codeVerifierBytes);
+    const digestBytes = new Uint8Array(digest);
+
+    const codeChallenge = this.base64URLEncode(digestBytes);
+
+    return { codeVerifier, codeChallenge };
   }
 
   async logIn(event) {
@@ -450,44 +467,20 @@ export class SessionHandler {
 
     const form = event.target;
 
-    const requestObject = {
-      username: form.username.value,
-      password: form.password.value,
-    };
-    const json = JSON.stringify(requestObject);
+    const { codeVerifier, codeChallenge } =
+      await SessionHandler.generatePKCEPair();
 
-    const response = await fetch(sessionEndpoint, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: json,
-    });
+    window.sessionStorage.setItem("codeVerifier", codeVerifier);
 
-    const contentType = response.headers.get("Content-Type");
-    if (contentType != "application/json") {
-      console.error("The response `Content-Type` for targets is not JSON.");
-      return;
-    }
+    const authorizeURI = new URL(form.endpoint.value + "/v0/authorize/");
+    authorizeURI.searchParams.set("response_type", "code");
+    authorizeURI.searchParams.set("client_id", "Reachard PWA");
+    authorizeURI.searchParams.set("code_challenge", codeChallenge);
+    authorizeURI.searchParams.set("code_challenge_method", "S256");
+    authorizeURI.searchParams.set("redirect_uri", window.location.origin);
+    authorizeURI.searchParams.set("scope", "all");
 
-    let responseObject;
-    try {
-      responseObject = await response.json();
-    } catch (err) {
-      console.error("Failed to parse the session token as JSON:", err);
-      return;
-    }
-
-    if (typeof responseObject !== "string") {
-      console.error("The session token is not a JSON string.");
-      return;
-    }
-
-    const sessionToken = responseObject;
-
-    const authStoreHandler = new AuthStoreHandler();
-    authStoreHandler.putSessionToken(sessionToken);
-    this.checkLoginStatus();
+    window.location = authorizeURI;
   }
 
   async logOut() {
@@ -506,6 +499,20 @@ export class SessionHandler {
     });
 
     await authStoreHandler.deleteSessionToken();
+    this.checkLoginStatus();
+  }
+
+  async init() {
+    const sessionLogInForm = document.getElementById("session-log-in-form");
+    sessionLogInForm.addEventListener("submit", (event) => this.logIn(event));
+
+    const sessionLogOutButton = document.getElementById(
+      "session-log-out-button",
+    );
+    sessionLogOutButton.addEventListener("click", (event) =>
+      this.logOut(event),
+    );
+
     this.checkLoginStatus();
   }
 }
