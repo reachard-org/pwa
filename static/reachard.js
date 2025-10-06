@@ -27,7 +27,7 @@ const targetsEndpoint = `${addr}/v0/targets/`;
 class View {
   constructor(refName, title, pathnameRegex) {
     this.ref = document.getElementById(`ref-${refName}`);
-    this.title = `${title} | Reachard`;
+    this.title = `${title} | Reachard PWA`;
     this.pathnameRegex = pathnameRegex;
   }
 
